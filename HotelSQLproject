@@ -1,0 +1,51 @@
+
+/*
+Hotel Data Exploration 
+
+Skills used:  Union, Joins,  Aggregate Functions, Creating Views, Rounding to 2 Decimal
+
+*/
+
+
+SELECT * 
+FROM SQLproject2..HotelData2018
+
+SELECT * 
+FROM SQLproject2..HotelData2019
+
+SELECT * 
+FROM SQLproject2..HotelData2020
+
+
+--Unifying the whole table
+
+CREATE VIEW HotelData AS
+SELECT * 
+FROM SQLproject2..HotelData2018
+UNION
+SELECT * 
+FROM SQLproject2..HotelData2019
+UNION
+SELECT * 
+FROM SQLproject2..HotelData2020
+
+SELECT * FROM
+HotelData
+
+--IS OUR HOTEL REVENUE GROWING BY YEAR?
+-- We Have Two Hotel Types So It Would be Good To Segment Revenue By Hotel Type
+
+SELECT arrival_date_year,hotel, 
+    ROUND(SUM((stays_in_week_nights+stays_in_weekend_nights)*adr),2) Revenue
+FROM HotelData
+GROUP BY arrival_date_year,hotel
+
+--JOINING ALL TABLE FOR LATER VISUALIZATION ON POWER BI
+
+SELECT *
+FROM HotelData HOL
+LEFT JOIN SQLproject2..Marketsegment MAK
+ON HOL.market_segment=MAK.market_segment
+LEFT JOIN SQLproject2..meal_cost ME
+ON ME.meal=HOL.meal
+
