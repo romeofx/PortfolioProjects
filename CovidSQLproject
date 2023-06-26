@@ -50,7 +50,6 @@ ORDER BY Populationpercentageinfected Desc
 SELECT continent,MAX(CAST(total_deaths as int)) TotalDeathCount
 FROM SQLproject1..CovidDeath
 WHERE continent is not  null
---AND location like '%states%'
 GROUP by continent
 ORDER BY TotalDeathCount Desc
 
@@ -59,7 +58,6 @@ ORDER BY TotalDeathCount Desc
 --SELECT continent,location,MAX(CAST(total_deaths as int)) TotalDeathCount
 --FROM SQLproject1..CovidDeath
 --WHERE continent is not null
---AND location like '%states%'
 --GROUP by continent,location
 --ORDER BY TotalDeathCount desc
 
