@@ -1,6 +1,5 @@
-/*
-Covid 19 Data Exploration 
+This Repository will hold all of the code and queries from the PortfolioProjects we create.
 
-Skills used: Joins, CTE's, Temp Tables, Windows Functions, Aggregate Functions, Creating Views, Converting Data Types
+Please feel free to take these and run with them. Make them your own and find you own insights
 
-*/
+I really do hope this is helpful and helps you land that dream job! :D
