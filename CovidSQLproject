@@ -17,23 +17,36 @@ ORDER BY 3,4
 
 --Select data we are going to be using
 
-SELECT continent, location,date,total_cases,new_cases,total_deaths,population
+SELECT continent
+      ,location
+      ,date,total_cases
+      ,new_cases,total_deaths
+      ,population
 FROM SQLproject1..CovidDeath
 ORDER BY 2,3
 
 --LOOKING AT TOTAL CASES VS TOTAL DEATH
 
-SELECT continent,location, date,total_cases,total_deaths,(total_deaths/total_cases)*100 Deathpercentage
+SELECT continent
+      ,location
+      ,date
+      ,total_cases
+      ,total_deaths
+      ,(total_deaths/total_cases)*100 Deathpercentage
 FROM SQLproject1..CovidDeath
 WHERE continent is not null
---and location like '%states% 
 ORDER BY 2,3
 
 
 --Looking at total_cases vs population
 --shows what percentage of population  got Covid
 
-SELECT continent,location,date,population,total_cases,(total_cases/population)*100 Populationpercentage
+SELECT continent
+      ,location
+      ,date
+      ,population
+      ,total_cases
+      ,(total_cases/population)*100 Populationpercentage
 FROM SQLproject1..CovidDeath
 WHERE continent is not null
 ORDER BY 2,3
@@ -41,17 +54,20 @@ ORDER BY 2,3
 --Looking At Country With Highest infection Rate Compared To Population
 
 
-SELECT location,population,MAX(CAST(total_cases as int)) Highestinfectincountry,MAX((total_cases/population))*100 
-Populationpercentageinfected
+SELECT location
+      ,population
+      ,MAX(CAST(total_cases as int))  Highestinfectincountry
+      ,MAX((total_cases/population))*100  Populationpercentageinfected
 FROM SQLproject1..CovidDeath
 WHERE continent is not null
-group by continent,location,population
+GROUP by continent,location,population
 ORDER BY Populationpercentageinfected Desc
 
 --Showing Continent With Highest Death Count per Population
 
 
-SELECT continent,MAX(CAST(total_deaths as int)) TotalDeathCount
+SELECT continent
+       ,MAX(CAST(total_deaths as int)) TotalDeathCount
 FROM SQLproject1..CovidDeath
 WHERE continent is not  null
 GROUP by continent
@@ -59,7 +75,9 @@ ORDER BY TotalDeathCount Desc
 
 
 
---SELECT continent,location,MAX(CAST(total_deaths as int)) TotalDeathCount
+--SELECT continent
+        ,location 
+        ,MAX(CAST(total_deaths as int)) TotalDeathCount
 --FROM SQLproject1..CovidDeath
 --WHERE continent is not null
 --GROUP by continent,location
@@ -67,15 +85,18 @@ ORDER BY TotalDeathCount Desc
 
 --GLOBAL NUMBER
 
-SELECT SUM(new_cases) total_cases, SUM(CAST(new_deaths as int)) total_death,SUM(CAST(new_deaths as int))/SUM(new_cases)
-*100 DeathpercentGlobal
+SELECT SUM(new_cases) total_cases
+      ,SUM(CAST(new_deaths as int)) total_death
+      ,SUM(CAST(new_deaths as int))/SUM(new_cases)*100 DeathpercentGlobal
 FROM SQLproject1..coviddeath
 WHERE continent is not null
 --ORDER BY 1,2
 --ORDER BY 1,2
 
---SELECT date,SUM(new_cases) total_cases, SUM(CAST(new_deaths as int)) total_death,SUM(CAST(new_deaths as int))/SUM(new_cases)
---*100 DeathpercentageGlobally
+--SELECT date
+        ,SUM(new_cases) total_cases
+        ,SUM(CAST(new_deaths as int)) total_death
+        ,SUM(CAST(new_deaths as int))/SUM(new_cases)*100 DeathpercentageGlobally
 --FROM SQLproject1..coviddeath
 --WHERE continent is not null
 --GROUP BY date
@@ -86,31 +107,40 @@ WHERE continent is not null
 
 SELECT *
 FROM SQLproject1..Coviddeath dea
-  JOIN SQLproject1..CovidVaccination vac
-  ON dea.location=vac.location
-  AND dea.Date=vac.Date
+JOIN SQLproject1..CovidVaccination vac
+      ON dea.location=vac.location
+      AND dea.Date=vac.Date
 ORDER BY 3,4
 
 --Looking at Total Population VS Vaccination
 
---SELECT dea.continent,dea.location,dea.Date,dea.population,vac.new_vaccinations,
---SUM(CONVERT(int,vac.new_vaccinations))OVER(PARTITION BY dea.location) Rollingpeoplevaccinated  
---FROM SQLproject1..Coviddeath dea
---  JOIN SQLproject1..CovidVaccination vac
---  ON dea.location=vac.location
---  AND dea.Date=vac.Date
---  WHERE dea.continent is not null
---  GROUP BY dea.continent,dea.location,dea.Date,dea.population,vac.new_vaccinations
---ORDER BY 2,3
-
-SELECT dea.continent,dea.location,dea.Date,dea.population,vac.new_vaccinations,
-SUM(CONVERT(int,vac.new_vaccinations))OVER(PARTITION BY dea.location ORDER BY dea.location,dea.date) Rollingpeoplevaccinated 
+SELECT dea.continent
+      ,dea.location
+      ,dea.Date
+      ,dea.population
+      ,vac.new_vaccinations
+      ,SUM(CONVERT(int,vac.new_vaccinations))OVER(PARTITION BY dea.location ) Rollingpeoplevaccinated 
 FROM SQLproject1..Coviddeath dea
-  JOIN SQLproject1..CovidVaccination vac
-  ON dea.location=vac.location
-  AND dea.Date=vac.Date
-  WHERE dea.continent is not null
-  GROUP BY dea.continent,dea.location,dea.Date,dea.population,vac.new_vaccinations
+JOIN SQLproject1..CovidVaccination vac
+     ON dea.location=vac.location
+     AND dea.Date=vac.Date
+WHERE dea.continent is not null
+GROUP BY dea.continent,dea.location,dea.Date,dea.population,vac.new_vaccinations
+ORDER BY 2,3
+
+
+SELECT dea.continent
+      ,dea.location
+      ,dea.Date
+      ,dea.population
+      ,vac.new_vaccinations
+      ,SUM(CONVERT(int,vac.new_vaccinations))OVER(PARTITION BY dea.location ORDER BY dea.location,dea.date) Rollingpeoplevaccinated 
+FROM SQLproject1..Coviddeath dea
+JOIN SQLproject1..CovidVaccination vac
+     ON dea.location=vac.location
+     AND dea.Date=vac.Date
+WHERE dea.continent is not null
+GROUP BY dea.continent,dea.location,dea.Date,dea.population,vac.new_vaccinations
 ORDER BY 2,3
 
 --USING CTE
@@ -118,16 +148,19 @@ ORDER BY 2,3
 
 WITH CTE_POPVSVAC (continent,location,date,population,new_vaccinations, Rollingpeoplevaccinated)
 AS
-(
- SELECT dea.continent,dea.location,dea.Date,dea.population,vac.new_vaccinations,
- SUM(CONVERT(int,vac.new_vaccinations))OVER(PARTITION BY dea.location ORDER BY dea.location,dea.date) Rollingpeoplevaccinated 
+(SELECT dea.continent
+      ,dea.location
+      ,dea.Date
+      ,dea.population
+      ,vac.new_vaccinations
+      ,SUM(CONVERT(int,vac.new_vaccinations))OVER(PARTITION BY dea.location ORDER BY dea.location,dea.date) Rollingpeoplevaccinated 
 FROM SQLproject1..Coviddeath dea
-  JOIN SQLproject1..CovidVaccination vac
-  ON dea.location=vac.location
-  AND dea.Date=vac.Date 
-  WHERE dea.continent is not null
+JOIN SQLproject1..CovidVaccination vac
+     ON dea.location=vac.location
+     AND dea.Date=vac.Date
+WHERE dea.continent is not null
 GROUP BY dea.continent,dea.location,dea.Date,dea.population,vac.new_vaccinations
-  --ORDER BY 2,3
+--ORDER BY 2,3
 )
 SELECT *,( Rollingpeoplevaccinated/population)*100 populationvaccinatedpercent
 FROM CTE_POPVSVAC
@@ -149,15 +182,19 @@ Rollingpeoplevaccinated numeric,
 )
 
 INSERT INTO #populationvaccinatedpercent
-SELECT dea.continent,dea.location,dea.Date,dea.population,vac.new_vaccinations,
- SUM(CONVERT(int,vac.new_vaccinations))OVER(PARTITION BY dea.location ORDER BY dea.location,dea.date) Rollingpeoplevaccinated 
+SELECT dea.continent
+      ,dea.location
+      ,dea.Date
+      ,dea.population
+      ,vac.new_vaccinations
+      ,SUM(CONVERT(int,vac.new_vaccinations))OVER(PARTITION BY dea.location ORDER BY dea.location,dea.date) Rollingpeoplevaccinated 
 FROM SQLproject1..Coviddeath dea
-  JOIN SQLproject1..CovidVaccination vac
-  ON dea.location=vac.location
-  AND dea.Date=vac.Date
-  WHERE dea.continent is not null
+JOIN SQLproject1..CovidVaccination vac
+     ON dea.location=vac.location
+     AND dea.Date=vac.Date
+WHERE dea.continent is not null
 GROUP BY dea.continent,dea.location,dea.Date,dea.population,vac.new_vaccinations
-  --ORDER BY 2,3
+--ORDER BY 2,3
 
 SELECT *,( Rollingpeoplevaccinated/population)*100 populationvaccinatedpercent
 FROM #populationvaccinatedpercent
@@ -167,19 +204,22 @@ FROM #populationvaccinatedpercent
 
 
 CREATE VIEW  DeathpercentageGlobal AS
-  SELECT date,SUM(new_cases) total_cases, SUM(CAST(new_deaths as int)) total_death,SUM(CAST(new_deaths as int))/SUM(new_cases)
-  *100 DeathpercentageGlobal
-     FROM SQLproject1..coviddeath
-     WHERE continent is not null
+SELECT date
+       ,SUM(new_cases) total_cases
+       ,SUM(CAST(new_deaths as int)) total_death
+       ,SUM(CAST(new_deaths as int))/SUM(new_cases)*100 DeathpercentageGlobal
+FROM SQLproject1..coviddeath
+WHERE continent is not null
 GROUP BY date
 
 SELECT *
 FROM DeathpercentageGlobal
 
 CREATE VIEW TotalDeathCount AS
-   SELECT continent,MAX(CAST(total_deaths as int)) TotalDeathCount
-   FROM SQLproject1..CovidDeath
-   WHERE continent is not  null
+SELECT continent
+       ,MAX(CAST(total_deaths as int)) TotalDeathCount
+FROM SQLproject1..CovidDeath
+WHERE continent is not  null
 GROUP by continent
 
 
@@ -187,10 +227,12 @@ SELECT *
 FROM TotalDeathCount
 
 CREATE VIEW Populationpercentageinfected AS
-SELECT location,population,MAX(CAST(total_cases as int)) Highestinfectincountry,MAX((total_cases/population))*100 
-Populationpercentageinfected
-  FROM SQLproject1..CovidDeath
-  WHERE continent is not null
+SELECT location
+       ,population
+       ,MAX(CAST(total_cases as int)) Highestinfectincountry
+       ,MAX((total_cases/population))*100 Populationpercentageinfected
+FROM SQLproject1..CovidDeath
+WHERE continent is not null
 GROUP BY continent,location,population
 
 
@@ -199,7 +241,12 @@ FROM Populationpercentageinfected
 
 
 CREATE VIEW Deathpercentage AS
-SELECT continent,location, date,total_cases,total_deaths,(total_deaths/total_cases)*100 Deathpercentage
+SELECT continent
+      ,location
+      ,date
+      ,total_cases
+      ,total_deaths
+      ,(total_deaths/total_cases)*100 Deathpercentage
 FROM SQLproject1..CovidDeath
 WHERE continent is not null
 
@@ -209,9 +256,14 @@ FROM Deathpercentage
 
 
 CREATE VIEW Populationpercentage AS
-SELECT continent,location,date,population,total_cases,(total_cases/population)*100 Populationpercentage
-from  SQLproject1..CovidDeath
-where continent is not null
+SELECT continent
+       ,location
+       ,date
+       ,population
+       ,total_cases
+       ,(total_cases/population)*100 Populationpercentage
+FROM SQLproject1..CovidDeath
+WHERE continent is not NULL
 
 
 SELECT * FROM
@@ -221,13 +273,17 @@ CREATE VIEW populationvaccinatedpercent AS
 WITH CTE_POPVSVAC (continent,location,date,population,new_vaccinations, Rollingpeoplevaccinated)
 AS
 (
- SELECT dea.continent,dea.location,dea.Date,dea.population,vac.new_vaccinations,
- SUM(CONVERT(int,vac.new_vaccinations))OVER(PARTITION BY dea.location ORDER BY dea.location,dea.date) Rollingpeoplevaccinated 
+ SELECT dea.continent
+       ,dea.location
+       ,dea.Date
+       ,dea.population
+       ,vac.new_vaccinations
+       ,SUM(CONVERT(int,vac.new_vaccinations))OVER(PARTITION BY dea.location ORDER BY dea.location,dea.date) Rollingpeoplevaccinated 
 FROM SQLproject1..Coviddeath dea
-  JOIN SQLproject1..CovidVaccination vac
-  ON dea.location=vac.location
-  AND dea.Date=vac.Date 
-  WHERE dea.continent is not null
+JOIN SQLproject1..CovidVaccination vac
+      ON dea.location=vac.location
+      AND dea.Date=vac.Date 
+WHERE dea.continent is not null
 GROUP BY dea.continent,dea.location,dea.Date,dea.population,vac.new_vaccinations
 
 )
