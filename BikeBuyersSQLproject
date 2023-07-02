@@ -1,0 +1,125 @@
+/*
+Bike Buyers Data Exploration 
+
+Skills used:Rounding to 2 Decimal,Aggregate Functions, Creating Views,
+*/
+
+SELECT *
+FROM SQLproject3..Bike_buyers
+
+--Looking at Customer commute per purchase
+
+SELECT Commute_Distance
+      ,Purchased_bike
+	    ,COUNT(purchased_bike) commute_purchasedcount
+FROM SQLproject3..Bike_buyers
+GROUP BY Commute_Distance,Purchased_bike
+ORDER BY 1,3 DESC
+
+
+
+
+--Looking at if there income change when they bought or do not buy
+--looking at the avg income per purchase
+
+
+SELECT Gender
+      ,Purchased_Bike
+	    ,ROUND(AVG(income),2) avg_income_perpurchase
+FROM SQLproject3..Bike_buyers
+GROUP BY Gender,Purchased_Bike
+ORDER BY avg_income_perpurchase DESC
+
+
+
+--Looking at the age-brackets per purchase
+
+SELECT Age_brackets
+       ,Purchased_Bike
+	     ,COUNT(purchased_bike) age_brackectscount
+--	   ,COUNT(Age_brackets)
+FROM SQLproject3..Bike_buyers
+GROUP BY Age_brackets,Purchased_Bike
+ORDER BY age_brackectscount DESC
+ 
+
+ --Looking at customers average income by regions and occupations
+
+ 
+SELECT Region
+      ,occupation
+	    ,ROUND(AVG(income),2) avg_income_per_region 
+FROM SQLproject3..Bike_buyers
+GROUP BY Region,occupation
+ORDER BY 1,3 DESC
+
+
+ -- Looking at the Count Gender per car
+  
+SELECT Gender
+      ,Cars
+	    ,COUNT(Gender) count_genderpercar
+FROM SQLproject3..Bike_buyers
+GROUP BY  Gender, Cars
+ORDER BY 1
+
+
+--CREATING VIEWS
+
+
+ CREATE VIEW commute_purchasedcount AS
+ SELECT Commute_Distance
+      ,Purchased_bike
+	   ,COUNT(purchased_bike) commute_purchasedcount
+FROM SQLproject3..Bike_buyers
+GROUP BY Commute_Distance,Purchased_bike
+--ORDER BY 1,3 DESC
+
+ SELECT *
+ FROM commute_purchasedcount
+ ORDER BY 3 DESC
+
+
+ CREATE VIEW avg_income_perpurchase AS
+ SELECT Gender
+      ,Purchased_Bike
+	   ,ROUND(AVG(income),2) avg_income_perpurchase
+FROM SQLproject3..Bike_buyers
+GROUP BY Gender,Purchased_Bike
+--ORDER BY 3 DESC
+
+DROP VIEW avg_income_perpurchase
+
+
+CREATE VIEW age_brackectscount AS
+SELECT Age_brackets
+       ,Purchased_Bike
+	     ,COUNT(purchased_bike) age_brackectscount
+--	   ,COUNT(Age_brackets)
+FROM SQLproject3..Bike_buyers
+GROUP BY Age_brackets,Purchased_Bike
+--ORDER BY age_brackectscount DESC
+
+
+CREATE VIEW avg_income_per_region AS
+ SELECT Region
+      ,occupation
+	   ,ROUND(AVG(income),2) avg_income_per_region 
+FROM SQLproject3..Bike_buyers
+GROUP BY Region,occupation
+--ORDER BY 1,3 DESC
+
+
+CREATE VIEW count_genderpercar AS
+SELECT Gender
+      ,Cars
+	   ,COUNT(Gender) count_genderpercar
+FROM SQLproject3..Bike_buyers
+GROUP BY  Gender, Cars
+--ORDER BY 1
+
+
+ 
+
+
+
