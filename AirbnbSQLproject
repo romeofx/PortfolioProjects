@@ -1,0 +1,174 @@
+
+/*
+Airbnb Data Analysis
+
+Skills used:Rounding to 2 Decimal,Aggregate Functions, Creating Views,
+*/
+
+
+
+SELECT * 
+FROM SQLproject4..Listings
+
+SELECT * 
+FROM SQLproject4..Reviews
+
+SELECT * 
+FROM SQLproject4..Calendar
+
+--Looking at the average price by Zipcode
+
+SELECT Zipcode
+       ,ROUND(AVG(price),2) Avg_price 
+FROM  SQLproject4..Listings
+WHERE Zipcode IS NOT Null
+GROUP BY zipcode
+
+--Looking at monthly revenue by year
+
+SELECT DATEPART(YEAR,date)
+       ,DATENAME(MONTH,Date) Month
+       ,SUM(price) Totalprice
+FROM SQLproject4..Calendar
+GROUP BY DATENAME(MONTH,Date), DATEPART(YEAR,date)
+
+--Looking at revenue per year
+
+SELECT YEAR(date)  Year
+       ,SUM(price) Total_price
+FROM SQLproject4..Calendar
+GROUP BY YEAR(date) 
+
+-- Looking at average price by bedrooms
+
+SELECT bedrooms
+       ,ROUND(AVG(price),2) Avg_price
+FROM SQLproject4..Listings
+WHERE bedrooms IS NOT Null
+AND bedrooms > 0
+GROUP BY bedrooms
+ORDER BY Bedrooms DESC
+
+-- Looking at Distinct count id of bedrooms
+
+SELECT bedrooms
+      ,COUNT(distinct  id) distinctcount_ID
+FROM SQLproject4..Listings
+WHERE bedrooms IS NOT NUll 
+AND bedrooms > 0
+GROUP BY bedrooms
+
+--looking at average price per roomtype
+
+SELECT room_type
+       ,ROUND(AVG(price),2) Avgprice
+FROM SQLproject4..Listings
+ GROUP BY room_type
+
+ --Looking at average weeklyprice by roomtype
+
+SELECT room_type
+       ,ROUND(AVG(weekly_price),2) Avgprice
+FROM SQLproject4..Listings
+ GROUP BY room_type
+
+--looking at monthlyprice per bedrooms
+
+ SELECT bedrooms
+       ,ROUND(AVG(monthly_price),2) AvgMonthlyprice
+FROM SQLproject4..listings
+WHERE bedrooms IS NOT Null
+AND bedrooms >0
+AND Monthly_price IS NOT Null
+GROUP BY bedrooms
+
+--looking at average monthlyprice per roomtype
+
+SELECT room_type
+       ,ROUND(AVG(monthly_price),2) Avgprice
+FROM SQLproject4..Listings
+ GROUP BY room_type
+
+-- Looking at distinct count reviewscorerating per roomtype 
+
+ SELECT room_type
+       ,COUNT(DISTINCT review_scores_rating) distinctcountR_S_R
+FROM SQLproject4..Listings
+ GROUP BY room_type
+
+
+ --CREATING VIEWS
+ 
+CREATE VIEW AvgPrice_by_Zipcode AS
+SELECT Zipcode
+       ,ROUND(AVG(price),2) Avg_price 
+FROM  SQLproject4..Listings
+WHERE Zipcode IS NOT Null
+GROUP BY zipcode
+
+CREATE VIEW monthly_revenue_by_year AS
+SELECT DATEPART(YEAR,date) year
+       ,DATENAME(MONTH,Date) Month
+       ,SUM(price) Totalprice
+FROM SQLproject4..Calendar
+GROUP BY DATENAME(MONTH,Date), DATEPART(YEAR,date)
+
+CREATE VIEW revenue_per_year AS 
+SELECT YEAR(date)  Year
+       ,SUM(price) Total_price
+FROM SQLproject4..Calendar
+GROUP BY YEAR(date)
+
+
+CREATE VIEW average_price_by_bedrooms AS
+SELECT bedrooms
+       ,ROUND(AVG(price),2) Avg_price
+FROM SQLproject4..Listings
+WHERE bedrooms IS NOT Null
+AND bedrooms > 0
+GROUP BY bedrooms
+--ORDER BY Bedrooms DESC
+
+CREATE VIEW Distinctcount_id_of_bedrooms AS
+SELECT bedrooms
+      ,COUNT(distinct  id) distinctcount_ID
+FROM SQLproject4..Listings
+WHERE bedrooms IS NOT NUll 
+AND bedrooms > 0
+GROUP BY bedrooms
+
+CREATE VIEW price_per_roomtype AS
+SELECT room_type
+       ,ROUND(AVG(price),2) Avgprice
+FROM SQLproject4..Listings
+GROUP BY room_type
+
+
+CREATE VIEW weeklyprice_by_roomtype AS
+SELECT room_type
+       ,ROUND(AVG(weekly_price),2) Avgprice
+FROM SQLproject4..Listings
+GROUP BY room_type
+
+
+
+CREATE VIEW monthlyprice_per_bedrooms AS
+SELECT bedrooms
+       ,ROUND(AVG(monthly_price),2) AvgMonthlyprice
+FROM SQLproject4..listings
+WHERE bedrooms IS NOT Null
+AND bedrooms >0
+AND Monthly_price IS NOT Null
+GROUP BY bedrooms
+
+CREATE VIEW monthlyprice_by_roomtype AS
+SELECT room_type
+       ,ROUND(AVG(monthly_price),2) Avgprice
+FROM SQLproject4..Listings
+GROUP BY room_type
+
+CREATE VIEW distinctcount_reviewscorerating_by_roomtype AS
+ SELECT room_type
+       ,COUNT(DISTINCT review_scores_rating) distinctcountR_S_R
+FROM SQLproject4..Listings
+ GROUP BY room_type
