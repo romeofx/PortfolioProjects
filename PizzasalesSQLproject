@@ -1,3 +1,9 @@
+/*
+Pizza_sales Data Analysis
+
+Skills used:Rounding to 2 Decimal,Aggregate Functions, Creating Views,Cast to decimal
+*/
+
 
 SELECT
      *
