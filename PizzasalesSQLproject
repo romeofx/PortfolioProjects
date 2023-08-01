@@ -25,13 +25,11 @@ FROM SQLproject5..pizza_sales
 
 
 SELECT
-     CAST(CAST(SUM(quantity)AS DECIMAL(10,2))/
-	 CAST(COUNT(DISTINCT order_id)AS DECIMAL(10,2)) AS DECIMAL (10,2)) AS Average_Pizzas_Per_Order
+     CAST(CAST(SUM(quantity)AS DECIMAL(10,2))/CAST(COUNT(DISTINCT order_id)AS DECIMAL(10,2)) AS DECIMAL (10,2)) AS Average_Pizzas_Per_Order
 FROM SQLproject5..pizza_sales
 
 SELECT
-     CAST(SUM(quantity)/
-	 CAST(COUNT(DISTINCT order_id)AS DECIMAL(10,2))AS decimal (10,2)) AS Average_Pizzas_Per_Order
+     CAST(SUM(quantity)/CAST(COUNT(DISTINCT order_id)AS DECIMAL(10,2))AS decimal (10,2)) AS Average_Pizzas_Per_Order
 FROM SQLproject5..pizza_sales
 
 
@@ -68,7 +66,6 @@ GROUP BY pizza_size
 SELECT pizza_category
       ,SUM(quantity) as Total_Quantity_Sold
 FROM SQLproject5..pizza_sales
---WHERE MONTH(order_date) = 2
 GROUP BY pizza_category
 ORDER BY Total_Quantity_Sold DESC
 
