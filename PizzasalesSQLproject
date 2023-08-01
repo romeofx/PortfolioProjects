@@ -79,7 +79,7 @@ ORDER BY Total_Quantity_Sold DESC
 
 SELECT
      TOP 5 pizza_name
-	,SUM(total_price) AS Total_Revenue
+    ,SUM(total_price) AS Total_Revenue
 FROM SQLproject5..pizza_sales
 GROUP BY pizza_name
 ORDER BY Total_Revenue DESC
@@ -88,7 +88,7 @@ ORDER BY Total_Revenue DESC
 
 SELECT
      TOP 5 pizza_name
-	,SUM(total_price) AS Total_Revenue
+     ,SUM(total_price) AS Total_Revenue
 FROM SQLproject5..pizza_sales
 GROUP BY pizza_name
 ORDER BY Total_Revenue ASC
@@ -96,28 +96,28 @@ ORDER BY Total_Revenue ASC
 
 SELECT
      TOP 5 pizza_name
-	,SUM(quantity) AS Total_Quantity
+    ,SUM(quantity) AS Total_Quantity
 FROM SQLproject5..pizza_sales
 GROUP BY pizza_name
 ORDER BY Total_Quantity ASC
 
 SELECT
      TOP 5 pizza_name
-	,SUM(quantity) AS Total_Quantity
+    ,SUM(quantity) AS Total_Quantity
 FROM SQLproject5..pizza_sales
 GROUP BY pizza_name
 ORDER BY Total_Quantity DESC
 
 SELECT
      TOP 5 pizza_name
-	,COUNT(DISTINCT order_id) AS Total_Order
+    ,COUNT(DISTINCT order_id) AS Total_Order
 FROM SQLproject5..pizza_sales
 GROUP BY pizza_name
 ORDER BY Total_Order ASC
 
 SELECT
      TOP 5 pizza_name
-	,COUNT(DISTINCT order_id) AS Total_Order
+    ,COUNT(DISTINCT order_id) AS Total_Order
 FROM SQLproject5..pizza_sales
 GROUP BY pizza_name
 ORDER BY Total_Order DESC
