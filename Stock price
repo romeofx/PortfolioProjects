@@ -1,0 +1,158 @@
+STOCK PRICE  DATA EXPLORATION
+
+/* Skills Used: Rounding to 2 Decimal, Aggregate Functions, Creating Views, Cte's, Subquery, Join.
+
+-- Inspect my db
+SELECT  * FROM s_p_500."table".s_p_table;
+
+
+
+--Which date in the sample saw the largest overall trading volume?
+SELECT
+    Date
+FROM
+    s_p_500."table".s_p_table
+GROUP BY
+    Date
+ORDER BY
+    SUM(Volume) DESC
+LIMIT
+    1
+
+-- On that date, which two stocks were traded most?
+/* USING A SUBQUERY */
+SELECT
+    symbol,
+    volume
+FROM
+    s_p_500."table".s_p_table
+WHERE
+    Date = (
+SELECT
+    Date
+FROM
+    s_p_500."table".s_p_table
+GROUP BY
+    Date
+ORDER BY
+    SUM(Volume) DESC
+LIMIT
+    1)
+ORDER BY
+    volume DESC
+LIMIT
+    2
+
+
+
+/* USING CTEs */
+WITH
+    highestVolDate AS (
+    SELECT
+        Date
+    FROM
+        s_p_500."table".s_p_table
+    GROUP BY
+        Date
+    ORDER BY
+        SUM(Volume) DESC
+    LIMIT
+        1
+    )
+
+SELECT
+    symbol,
+    volume
+FROM
+    s_p_500."table".s_p_table
+WHERE
+    date = (SELECT * FROM highestVolDate)
+ORDER BY
+    2 DESC
+LIMIT
+    2
+
+
+
+
+-- On which day of the week does volume tend to be highest? Lowest?
+(SELECT
+    'Highest day' AS key,
+    TO_CHAR(date, 'day') AS dayOfWeek,
+    ROUND(AVG(volume)) AS averageVol
+FROM
+    s_p_500."table".s_p_table
+GROUP BY
+    1, 2
+ORDER BY
+    3 DESC
+LIMIT
+    1)
+UNION ALL
+(SELECT
+    'Lowest day' AS key,
+    TO_CHAR(date, 'day') AS dayOfWeek,
+    ROUND(AVG(volume)) AS averageVol
+FROM
+    s_p_500."table".s_p_table
+GROUP BY
+    1, 2
+ORDER BY
+    3 ASC
+LIMIT
+    1)
+
+
+
+-- On which date did Amazon (AMZN) see the most volatility, measured by the difference
+-- between the high and low price?
+
+SELECT
+    Date,
+    (high - low) AS volatility
+FROM
+    s_p_500."table".s_p_table
+WHERE
+    UPPER(symbol) = 'AMZN'
+ORDER BY
+    2 DESC
+LIMIT 1
+
+
+-- If you could go back in time and invest in one stock from 1/2/2014 - 12/29/2017, which
+-- would you choose? What % gain would you realize?
+
+WITH
+    openingPrice AS (
+    SELECT
+        symbol,
+        open
+    FROM
+        s_p_500."table".s_p_table
+    WHERE
+        date = '2014-01-02'
+    ),
+
+    closingPrice AS (
+    SELECT
+        symbol,
+        close
+    FROM
+        s_p_500."table".s_p_table
+    WHERE
+        date = '2017-12-29'
+    )
+
+SELECT
+    op.symbol,
+    op.open,
+    cp.close,
+    (cp.close - op.open)/ op.open AS profitIndex
+FROM
+    openingPrice op
+INNER JOIN
+    closingPrice cp
+ON
+    op.symbol = cp.symbol
+ORDER BY
+    4 DESC
